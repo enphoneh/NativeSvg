@@ -3,12 +3,11 @@
 //
 #include "com_aven_nativesvg_NativeSvgUtils.h";
 #include <android/log.h>
-#include "SkCanvas.h"
 
 #define  LOG_TAG    "hyf"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR , LOG_TAG, __VA_ARGS__)
 
-JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
+JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
         (JNIEnv *env, jclass zthis, jstring sourceString) {
     //    SkCanvas* canv = GraphicsJNI::getNativeCanvas(env, canvasObj);
 //    if (!canv)
@@ -20,24 +19,40 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
     const char *str;
     str = env->GetStringUTFChars(sourceString, false);
     if (str == NULL) {
-        return NULL;
+        return;
     }
+    jclass objClass = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
+    jmethodID mid = env->GetStaticMethodID(objClass, "onDataCallBack", "(C[F)V");
     int sourceLength = strlen(str);
     char preOperate = ' ';
     float params[6] = {-1};
     int paramsIndex = 0;
-    char cmd[20] = {'-'};
-    memset(params, -1, sizeof(params));
+    char cmd[20];
+    bool isColor = false;
+    char* color;
+    memset(params, -1, 6);
+    memset(cmd,'-',20);
     for (int i = 0; i < sourceLength; i++) {
         char cha = str[i];
         switch (cha) {
             case 'M':
             case 'm': {
                 if (preOperate != ' ') {
-//                                path.moveTo(params[0], params[1]);
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
                 }
-
-                memset(params, -1, sizeof(params));
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
                 break;
@@ -47,12 +62,33 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'c':
             case 'S':
             case 's': {
-
-                if (preOperate != ' ') {
-//                                path.cubicTo(params[0], params[1],params[2], params[3],params[4], params[5]);
+                if (isColor) {
+                    int cmdLength = strlen(cmd);
+                    for (int j = 0; j < cmdLength; j++) {
+                        if (cmd[j] == '-') {
+                            cmd[j] = cha;
+                            break;
+                        }
+                    }
+                    break;
                 }
 
-                memset(params, -1, sizeof(params));
+                if (preOperate != ' ') {
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
+                }
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
             }
@@ -62,10 +98,21 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'z': {
 
                 if (preOperate != ' ') {
-//                                path.close();
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
                 }
-
-                memset(params, -1, sizeof(params));
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
             }
@@ -73,21 +120,53 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'L':
             case 'l': {
                 if (preOperate != ' ') {
-//                                path.lineTo(params[0], params[1]);
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
                 }
-
-                memset(params, -1, sizeof(params));
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
                 break;
             }
             case 'A':
             case 'a': {
-                if (preOperate != ' ') {
-//                                path.arcTo(params[0], params[1],params[2], params[3],params[4], params[5], false);
+                if (isColor) {
+                    int cmdLength = strlen(cmd);
+                    for (int j = 0; j < cmdLength; j++) {
+                        if (cmd[j] == '-') {
+                            cmd[j] = cha;
+                            break;
+                        }
+                    }
+                    break;
                 }
-
-                memset(params, -1, sizeof(params));
+                if (preOperate != ' ') {
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
+                }
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
                 break;
@@ -97,19 +176,58 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'q':
             case 't': {
                 if (preOperate != ' ') {
-//                                path.quadTo(params[0], params[1],params[2], params[3]);
+                    if (objClass != NULL && mid != NULL) {
+                        int len = 0;
+                        for (int j = 0; j < 20; j++) {
+                            if (params[j] == -1) {
+                                break;
+                            }
+                            len++;
+                        }
+                        jfloatArray array = env->NewFloatArray(len);
+                        env->SetFloatArrayRegion(array,0,len,params);
+                        env->CallStaticVoidMethod(objClass,mid, preOperate, array);
+                        env->DeleteLocalRef(array);
+                    }
                 }
-
-                memset(params, -1, sizeof(params));
+                memset(params, -1, 6);
                 paramsIndex = 0;
                 preOperate = cha;
                 break;
             }
-            case '$':
+            case '$':{
+                jclass objClass3 = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
+                jmethodID mid3 = env->GetStaticMethodID(objClass, "onPathFinish", "(Ljava/lang/String;)V");
+                jstring jcolor = env->NewStringUTF(color);
+                env->CallStaticVoidMethod(objClass3,mid3, jcolor);
+                env->DeleteLocalRef(jcolor);
+                break;
+            }
 
                 break;
-            case '@':
+            case '@':{
+                isColor = false;
+                int len = 0;
+                for (int j = 0; j < 20; j++) {
+                    if (cmd[j] == '-') {
+                        break;
+                    }
+                    len++;
+                }
+                if (len == 0) {
+                    break;
+                }
+                if (color != NULL) {
+                    free(color);
+                    color = NULL;
+                }
+                color = (char*)malloc(len*sizeof(char));
+                for (int j = 0; j < len; j++) {
+                    color[j] = cmd[j];
+                }
+                memset(cmd, '-', 20);
                 break;
+            }
 
             case ' ': {
                 int len = 0;
@@ -127,10 +245,13 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
                     strParam[j] = cmd[j];
                 }
                 params[paramsIndex++] = atof(strParam);
-                memset(cmd, '-', sizeof(cmd));
+                memset(cmd, '-', 20);
                 break;
             }
             default: {
+                if (cha == '#') {
+                    isColor = true;
+                }
                 int cmdLength = strlen(cmd);
                 for (int j = 0; j < cmdLength; j++) {
                     if (cmd[j] == '-') {
@@ -142,16 +263,7 @@ JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             }
         }
     }
-    return NULL;
-}
-
-long fun(char *s) {
-    int i, t;
-    long sum = 0;
-    for (i = 0; s[i]; i++) {
-        if (s[i] <= '9')t = s[i] - '0';
-        else t = s[i] - 'a' + 10;
-        sum = sum * 16 + t;
-    }
-    return sum;
+    jclass objClass2 = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
+    jmethodID mid2 = env->GetStaticMethodID(objClass, "onDataFinish", "()V");
+    env->CallStaticVoidMethod(objClass2,mid2);
 }

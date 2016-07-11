@@ -14,9 +14,8 @@ extern "C" {
  * Method:    getNativeBitmap
  * Signature: (Ljava/lang/String;)Landroid/graphics/Bitmap;
  */
-JNIEXPORT jobject JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
+JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
   (JNIEnv *, jclass, jstring);
-long fun(char *);
 #ifdef __cplusplus
 }
 #endif
