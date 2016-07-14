@@ -6,16 +6,8 @@
 
 #define  LOG_TAG    "hyf"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR , LOG_TAG, __VA_ARGS__)
-
 JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
         (JNIEnv *env, jclass zthis, jstring sourceString) {
-    //    SkCanvas* canv = GraphicsJNI::getNativeCanvas(env, canvasObj);
-//    if (!canv)
-//    {
-//        return NULL;
-//    }
-//    SkPaint paint;
-//    paint.setFlags(paint.kAntiAlias_Flag);
     const char *str;
     str = env->GetStringUTFChars(sourceString, false);
     if (str == NULL) {
@@ -23,6 +15,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
     }
     jclass objClass = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
     jmethodID mid = env->GetStaticMethodID(objClass, "onDataCallBack", "(C[F)V");
+    jclass objClass3 = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
+    jmethodID mid3 = env->GetStaticMethodID(objClass3, "onPathFinish", "(Ljava/lang/String;)V");
     int sourceLength = strlen(str);
     char preOperate = ' ';
     float params[6] = {-1};
@@ -39,15 +33,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'm': {
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -75,15 +62,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
 
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -99,15 +79,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
 
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -121,15 +94,9 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 'l': {
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -153,15 +120,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
                 }
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -177,15 +137,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
             case 't': {
                 if (preOperate != ' ') {
                     if (objClass != NULL && mid != NULL) {
-                        int len = 0;
-                        for (int j = 0; j < 20; j++) {
-                            if (params[j] == -1) {
-                                break;
-                            }
-                            len++;
-                        }
-                        jfloatArray array = env->NewFloatArray(len);
-                        env->SetFloatArrayRegion(array,0,len,params);
+                        jfloatArray array = env->NewFloatArray(6);
+                        env->SetFloatArrayRegion(array,0,6,params);
                         env->CallStaticVoidMethod(objClass,mid, preOperate, array);
                         env->DeleteLocalRef(array);
                     }
@@ -196,8 +149,6 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
                 break;
             }
             case '$':{
-                jclass objClass3 = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
-                jmethodID mid3 = env->GetStaticMethodID(objClass, "onPathFinish", "(Ljava/lang/String;)V");
                 jstring jcolor = env->NewStringUTF(color);
                 env->CallStaticVoidMethod(objClass3,mid3, jcolor);
                 env->DeleteLocalRef(jcolor);
@@ -265,5 +216,8 @@ JNIEXPORT void JNICALL Java_com_aven_nativesvg_NativeSvgUtils_getNativeBitmap
     }
     jclass objClass2 = env->FindClass("com/aven/nativesvg/NativeSvgUtils");
     jmethodID mid2 = env->GetStaticMethodID(objClass, "onDataFinish", "()V");
-    env->CallStaticVoidMethod(objClass2,mid2);
+    env->CallStaticVoidMethod(objClass,mid2);
+    env->DeleteLocalRef(objClass);
+    env->DeleteLocalRef(objClass2);
+    env->DeleteLocalRef(objClass3);
 }
